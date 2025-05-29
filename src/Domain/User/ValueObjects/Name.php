@@ -46,7 +46,7 @@ final readonly class Name
 
     private function validateOnlyLetters(string $name): void
     {
-        $pattern = preg_match('/^[a-zA-Z\s]+$/u', $name) === 1;
+        $pattern = (bool) preg_match('/^[\p{L}\p{M}\'\.\-\s]+$/u', $name);
 
         if ($pattern === false) {
             throw new InvalidArgumentException('Name must contains only letters.');

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\User\ValueObjects;
 
-use PHPUnit\Framework\TestCase;
-use Src\Domain\User\ValueObjects\Name;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+use Src\Domain\User\ValueObjects\Name;
 
 class NameTest extends TestCase
 {
@@ -36,7 +36,7 @@ class NameTest extends TestCase
 
     #[Test]
     #[DataProvider('invalidNameProvider')]
-    public function itShouldValidateNameWhenProvidedNameIsInvalid(string $name, string $expectedMessage): void
+    public function it_should_validate_name_when_provided_name_is_invalid(string $name, string $expectedMessage): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedMessage);
@@ -44,7 +44,7 @@ class NameTest extends TestCase
     }
 
     #[Test]
-    public function itShouldTransformEachFirstLetterNameToUpperCase(): void
+    public function it_should_transform_each_first_letter_name_to_upper_case(): void
     {
         $name = new Name('john doe');
         $this->assertEquals('John Doe', $name->getValue());

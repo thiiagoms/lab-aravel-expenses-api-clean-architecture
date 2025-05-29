@@ -29,11 +29,6 @@ final readonly class Password
         return password_verify($password, $this->password);
     }
 
-    public function __toString(): string
-    {
-        return $this->password;
-    }
-
     private function checkPasswordMinLength(string $password): bool
     {
         return strlen($password) > self::MIN_LENGTH;
