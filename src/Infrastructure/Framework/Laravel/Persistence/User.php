@@ -20,8 +20,9 @@ use Src\Domain\User\ValueObjects\Email;
 use Src\Domain\User\ValueObjects\Name;
 use Src\Domain\User\ValueObjects\Password;
 use Src\Domain\ValueObjects\Id;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasUuids, Notifiable;
@@ -116,5 +117,21 @@ class User extends Authenticatable
             get: fn (string $status): StatusInterface => StatusFactory::build(Status::from($status)),
             set: fn (StatusInterface $status): string => $status->getStatus()->value
         );
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     */
+    public function getJWTIdentifier(): mixed
+    {
+        return $this->id->getValue();
+    }
+
+    /**
+     * Return a key value array containing any custom claims to be added to the JWT.
+     */
+    public function getJWTCustomClaims(): array
+    {
+        return [];
     }
 }

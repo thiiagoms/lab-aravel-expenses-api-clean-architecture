@@ -14,3 +14,9 @@ Route::post('register', RegisterUserApiController::class)->name('register');
 Route::get('email-confirmation', ConfirmEmailApiController::class)
     ->name('email-confirmation')
     ->middleware('signed');
+
+/**
+ * |--------------------
+ * | Protected routes
+ * |--------------------
+ */
