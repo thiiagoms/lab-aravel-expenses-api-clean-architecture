@@ -7,6 +7,7 @@ namespace Src\Interfaces\Http\Api\V1\Auth\Requests\Authenticate;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Response;
 use Src\Interfaces\Http\Api\V1\User\Rules\EmailIsValidRule;
 use Src\Interfaces\Http\Api\V1\User\Rules\PasswordIsValidRule;
 
