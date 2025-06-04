@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Src\Infrastructure\Framework\Laravel\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Src\Application\UseCases\Auth\Authenticate\AuthenticateAction;
+use Src\Application\UseCases\Auth\Authenticate\Interfaces\AuthenticateActionInterface;
+use Src\Application\UseCases\Auth\Authenticate\Interfaces\CheckUserCredentialsInterface;
+use Src\Application\UseCases\Auth\Authenticate\Validators\CheckUserCredentials;
 use Src\Application\UseCases\User\Register\ConfirmUserEmailAction;
 use Src\Application\UseCases\User\Register\Interfaces\ConfirmUserEmailActionInterface;
 use Src\Application\UseCases\User\Register\Interfaces\RegisterUserActionInterface;
@@ -25,6 +29,9 @@ class AppActionProvider extends ServiceProvider
             VerifyUserEmailIsAvailableInterface::class => VerifyUserEmailIsAvailable::class,
             RegisterUserActionInterface::class => RegisterUserAction::class,
             ConfirmUserEmailActionInterface::class => ConfirmUserEmailAction::class,
+            // Auth
+            AuthenticateActionInterface::class => AuthenticateAction::class,
+            CheckUserCredentialsInterface::class => CheckUserCredentials::class,
         ];
 
         foreach ($actions as $interface => $action) {

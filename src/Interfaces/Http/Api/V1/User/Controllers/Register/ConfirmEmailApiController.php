@@ -63,19 +63,10 @@ final class ConfirmEmailApiController extends Controller
             ),
             new Response(
                 response: HttpResponse::HTTP_BAD_REQUEST,
-                description: 'Invalid or expired signature',
+                description: 'Validation error or invalid/expired signature',
                 content: new JsonContent(
                     properties: [
                         new Property(property: 'message', type: 'string', example: 'Invalid or expired URL.'),
-                    ],
-                    type: 'object'
-                )
-            ),
-            new Response(
-                response: HttpResponse::HTTP_BAD_REQUEST,
-                description: 'Validation error',
-                content: new JsonContent(
-                    properties: [
                         new Property(
                             property: 'errors',
                             type: 'object',
