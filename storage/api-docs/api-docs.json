@@ -1,0 +1,348 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Invoices API Documentation",
+        "description": "API Documentation for Invoices management system",
+        "contact": {
+            "name": "Thiiagoms",
+            "email": "thiiagoms@proton.me"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api/documentation",
+            "description": "API Documentation Server"
+        }
+    ],
+    "paths": {
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Authenticate user and return token",
+                "description": "Authenticate user by providing their email and password. If the credentials are valid, a token is returned which can be used to authenticate subsequent requests.",
+                "operationId": "8734854b20330649439af665496f2cdf",
+                "requestBody": {
+                    "description": "User data for login",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthenticateSwaggerRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TokenSwaggerResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The server could not process the request due to invalid input."
+                    }
+                }
+            }
+        },
+        "/api/v1/email-confirmation": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Confirm user email",
+                "description": "Confirms a user's email address using a signed URL with query parameters.",
+                "operationId": "confirmUserEmail",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "UUID of the user to confirm",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "expires",
+                        "in": "query",
+                        "description": "Expiration timestamp of the signed URL",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "signature",
+                        "in": "query",
+                        "description": "HMAC signature of the URL",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email confirmed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email confirmed successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error or invalid/expired signature",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid or expired URL."
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "id": [
+                                                    "The id field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/register": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Requests a new user",
+                "description": "Registers a new user and returns the created user data.",
+                "operationId": "registerUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterSwaggerRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User successfully registered",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserSwaggerResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "example": "Error message about field validation error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AuthenticateSwaggerRequest": {
+                "title": "Authenticate user request",
+                "description": "Base request for user authentication operation.",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "A valid email address.",
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "password": {
+                        "description": "Password with at least one uppercase letter, one lowercase letter, one number, and one special character.",
+                        "type": "string",
+                        "minLength": 8,
+                        "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).+$",
+                        "example": "@p5sSw0rd!"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "email": "john@example.com",
+                    "password": "@p5sSw0rd!"
+                }
+            },
+            "TokenSwaggerResponse": {
+                "title": "Token for authenticate user request",
+                "description": "Response containing authentication token",
+                "properties": {
+                    "token": {
+                        "description": "The token for the user.",
+                        "type": "string",
+                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                    },
+                    "token_type": {
+                        "description": "The type of the token.",
+                        "type": "string",
+                        "example": "Bearer"
+                    },
+                    "expires_in": {
+                        "description": "The expiration time of the token.",
+                        "type": "integer",
+                        "example": 3600
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterSwaggerRequest": {
+                "title": "Register user request",
+                "description": "Base request for user register operation.",
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The full name of the user.",
+                        "type": "string",
+                        "maxLength": 150,
+                        "minLength": 3,
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "description": "A valid email address.",
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "password": {
+                        "description": "Password with at least one uppercase letter, one lowercase letter, one number, and one special character.",
+                        "type": "string",
+                        "minLength": 8,
+                        "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).+$",
+                        "example": "@p5sSw0rd!"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "name": "John Doe",
+                    "email": "john@example.com",
+                    "password": "@p5sSw0rd!"
+                }
+            },
+            "UserSwaggerResponse": {
+                "title": "User response",
+                "description": "Base response for user CRUD operations",
+                "properties": {
+                    "data": {
+                        "title": "Data",
+                        "description": "The data of the created user.",
+                        "properties": {
+                            "id": {
+                                "title": "Id",
+                                "description": "The unique identifier of the user.",
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "name": {
+                                "title": "Name",
+                                "description": "The name of the user.",
+                                "type": "string",
+                                "example": "John Doe"
+                            },
+                            "email": {
+                                "title": "Email",
+                                "description": "The email address of the user.",
+                                "type": "string",
+                                "format": "email",
+                                "example": "johndoe@example.com"
+                            },
+                            "created_at": {
+                                "title": "Created at",
+                                "description": "The date and time when the user was created.",
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2023-01-01 12:00:00"
+                            },
+                            "updated_at": {
+                                "title": "Updated at",
+                                "description": "The date and time when the user was updated.",
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2023-01-01 12:00:00"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "User",
+            "description": "User"
+        }
+    ]
+}
