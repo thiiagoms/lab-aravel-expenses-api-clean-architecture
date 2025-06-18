@@ -10,7 +10,7 @@ use Src\Domain\User\ValueObjects\Password;
 use Src\Infrastructure\Support\Sanitizer;
 use Src\Interfaces\Http\Api\V1\User\Requests\Register\RegisterUserApiRequest;
 
-final class RegisterUserDTO
+final readonly class RegisterUserDTO
 {
     public function __construct(private Name $name, private Email $email, private Password $password) {}
 

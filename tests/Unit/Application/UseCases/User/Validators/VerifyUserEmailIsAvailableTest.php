@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Application\UseCases\User\Register\Validators;
+namespace Tests\Unit\Application\UseCases\User\Validators;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Src\Application\UseCases\User\Register\Exceptions\EmailAlreadyExistsException;
-use Src\Application\UseCases\User\Register\Validators\VerifyUserEmailIsAvailable;
+use Src\Application\UseCases\User\Exceptions\EmailAlreadyExistsException;
+use Src\Application\UseCases\User\Validators\VerifyUserEmailIsAvailable;
 use Src\Domain\Repositories\User\Find\FindUserByEmailRepositoryInterface;
 use Src\Domain\User\Entities\User;
 use Src\Domain\User\ValueObjects\Email;
@@ -52,7 +52,7 @@ class VerifyUserEmailIsAvailableTest extends TestCase
             ));
 
         $this->expectException(EmailAlreadyExistsException::class);
-        $this->expectExceptionMessage("User with e-mail '{$this->email->getValue()}' already exists");
+        $this->expectExceptionMessage('User with provided e-mail already exists');
 
         $this->verifyEmail->verify($this->email);
     }

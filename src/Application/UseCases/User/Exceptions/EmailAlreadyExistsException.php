@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Src\Application\UseCases\User\Register\Exceptions;
+namespace Src\Application\UseCases\User\Exceptions;
 
-use Src\Domain\User\ValueObjects\Email;
 use Throwable;
 
 final class EmailAlreadyExistsException extends \DomainException
@@ -14,8 +13,8 @@ final class EmailAlreadyExistsException extends \DomainException
         parent::__construct($message, $code, $previous);
     }
 
-    public static function create(Email $email): self
+    public static function create(): self
     {
-        return new self("User with e-mail '{$email->getValue()}' already exists");
+        return new self('User with provided e-mail already exists');
     }
 }

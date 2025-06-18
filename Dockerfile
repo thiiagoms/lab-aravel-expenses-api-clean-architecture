@@ -5,7 +5,7 @@ ARG user=yourusername
 ARG uid=1000
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get Update && apt-get install -y \
     git \
     curl \
     libpng-dev \

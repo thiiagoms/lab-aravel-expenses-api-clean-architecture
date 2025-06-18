@@ -6,8 +6,8 @@ namespace Src\Application\UseCases\User\Register;
 
 use Exception;
 use Src\Application\Interfaces\Mail\SendUserConfirmationEmailInterface;
+use Src\Application\UseCases\User\Exceptions\EmailAlreadyExistsException;
 use Src\Application\UseCases\User\Register\DTO\RegisterUserDTO;
-use Src\Application\UseCases\User\Register\Exceptions\EmailAlreadyExistsException;
 use Src\Application\UseCases\User\Register\Interfaces\RegisterUserActionInterface;
 use Src\Application\UseCases\User\Register\Interfaces\VerifyUserEmailIsAvailableInterface;
 use Src\Domain\Repositories\Transaction\TransactionManagerInterface;

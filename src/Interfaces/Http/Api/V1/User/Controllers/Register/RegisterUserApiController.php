@@ -27,7 +27,7 @@ final class RegisterUserApiController extends Controller
         summary: 'Requests a new user',
         requestBody: new RequestBody(
             required: true,
-            content: new JsonContent(ref: '#/components/schemas/RegisterSwaggerRequest')
+            content: new JsonContent(ref: '#/components/schemas/RegisterUserSwaggerRequest')
         ),
         tags: ['User'],
         responses: [

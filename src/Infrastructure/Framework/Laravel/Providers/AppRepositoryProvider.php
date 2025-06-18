@@ -9,10 +9,12 @@ use Src\Domain\Repositories\User\Find\FindUserByEmailRepositoryInterface;
 use Src\Domain\Repositories\User\Find\FindUserByIdRepositoryInterface;
 use Src\Domain\Repositories\User\Register\ConfirmUserEmailRepositoryInterface;
 use Src\Domain\Repositories\User\Register\RegisterUserRepositoryInterface;
+use Src\Domain\Repositories\User\Update\UpdateUserRepositoryInterface;
 use Src\Infrastructure\Adapters\Repositories\ORM\User\Find\EloquentFindUserByEmailRepository;
 use Src\Infrastructure\Adapters\Repositories\ORM\User\Find\EloquentFindUserByIdRepository;
 use Src\Infrastructure\Adapters\Repositories\ORM\User\Register\EloquentConfirmUserEmailRepository;
 use Src\Infrastructure\Adapters\Repositories\ORM\User\Register\EloquentRegisterUserRepository;
+use Src\Infrastructure\Adapters\Repositories\ORM\User\Update\EloquentUpdateUserRepository;
 
 class AppRepositoryProvider extends ServiceProvider
 {
@@ -28,6 +30,7 @@ class AppRepositoryProvider extends ServiceProvider
             FindUserByEmailRepositoryInterface::class => EloquentFindUserByEmailRepository::class,
             RegisterUserRepositoryInterface::class => EloquentRegisterUserRepository::class,
             ConfirmUserEmailRepositoryInterface::class => EloquentConfirmUserEmailRepository::class,
+            UpdateUserRepositoryInterface::class => EloquentUpdateUserRepository::class,
         ];
 
         foreach ($repositories as $interface => $repository) {
