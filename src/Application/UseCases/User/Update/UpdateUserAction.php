@@ -58,6 +58,6 @@ final readonly class UpdateUserAction implements UpdateUserActionInterface
 
     private function shouldSkipEmailValidation(UpdateUserDTO $dto, User $user): bool
     {
-        return empty($dto->email()) || $dto->email() === $user->email();
+        return empty($dto->email()) || $dto->email()->equals($user->email());
     }
 }

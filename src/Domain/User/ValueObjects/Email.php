@@ -24,6 +24,11 @@ final readonly class Email
         return $this->email;
     }
 
+    public function equals(Email $email): bool
+    {
+        return $this->email === $email->getValue();
+    }
+
     private function validate(string $email): void
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
