@@ -41,7 +41,7 @@ final class EmailTest extends TestCase
         $this->assertSame('ilovelaravel@gmail.com', $email->getValue());
     }
 
-    public static function emailProvided(): array
+    public static function emailEqualityCases(): array
     {
         return [
             [new Email('ilovelaravel@gmail.com'), true],
