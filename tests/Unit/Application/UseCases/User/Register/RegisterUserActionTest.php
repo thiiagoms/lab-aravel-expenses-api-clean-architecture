@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\UseCases\User\Register;
 
-use Exception;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Src\Application\Interfaces\Mail\SendUserConfirmationEmailInterface;
+use Src\Application\UseCases\User\Exceptions\EmailAlreadyExistsException;
 use Src\Application\UseCases\User\Register\DTO\RegisterUserDTO;
-use Src\Application\UseCases\User\Register\Exceptions\EmailAlreadyExistsException;
 use Src\Application\UseCases\User\Register\Interfaces\VerifyUserEmailIsAvailableInterface;
 use Src\Application\UseCases\User\Register\RegisterUserAction;
 use Src\Domain\Repositories\Transaction\TransactionManagerInterface;
@@ -37,6 +37,9 @@ class RegisterUserActionTest extends TestCase
 
     private RegisterUserAction $action;
 
+    /**
+     * @throw Exception
+     */
     protected function setUp(): void
     {
         $this->verifyUserEmailIsAvailable = $this->createMock(VerifyUserEmailIsAvailableInterface::class);
@@ -62,7 +65,7 @@ class RegisterUserActionTest extends TestCase
     }
 
     /**
-     * @throws EmailAlreadyExistsException|Exception
+     * @throws EmailAlreadyExistsException|Exception|\Exception
      */
     #[Test]
     public function it_should_throw_exception_when_email_already_exists(): void
@@ -72,16 +75,16 @@ class RegisterUserActionTest extends TestCase
             ->expects($this->once())
             ->method('verify')
             ->with($this->dto->email())
-            ->willThrowException(EmailAlreadyExistsException::create($this->dto->email()));
+            ->willThrowException(EmailAlreadyExistsException::create());
 
         $this->expectException(EmailAlreadyExistsException::class);
-        $this->expectExceptionMessage("User with e-mail '{$this->dto->email()->getValue()}' already exists");
+        $this->expectExceptionMessage('User with provided e-mail already exists');
 
         $this->action->handle($this->dto);
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|\Exception
      */
     #[Test]
     public function it_should_register_user_successfully(): void

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Src\Infrastructure\Adapters\Repositories\ORM;
 
+use Illuminate\Database\Eloquent\Model;
+
 abstract class BaseEloquentRepository
 {
     /**
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
     protected $model;
 

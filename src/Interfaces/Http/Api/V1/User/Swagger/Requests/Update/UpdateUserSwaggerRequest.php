@@ -1,21 +1,20 @@
 <?php
 
-namespace Src\Interfaces\Http\Api\V1\User\Swagger\Requests\Register;
+namespace Src\Interfaces\Http\Api\V1\User\Swagger\Requests\Update;
 
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    title: 'Register user request',
-    description: 'Base request for user register operation.',
-    required: ['name', 'email', 'password'],
+    title: 'Update user data request with PUT/PATCH HTTP methods',
+    description: 'Payload to partial/fully update the authenticated user data. For PUT request all fields are required.',
     type: 'object',
     example: [
-        'name' => 'John Doe',
-        'email' => 'john@example.com',
-        'password' => '@p5sSw0rd!',
+        'name' => 'Jane Doe',
+        'email' => 'jane@example.com',
+        'password' => 'StrongP@ss123!',
     ]
 )]
-class RegisterSwaggerRequest
+class UpdateUserSwaggerRequest
 {
     #[OA\Property(
         property: 'name',
@@ -23,7 +22,7 @@ class RegisterSwaggerRequest
         type: 'string',
         maxLength: 150,
         minLength: 3,
-        example: 'John Doe'
+        example: 'Jane Doe'
     )]
     public string $name;
 
@@ -32,7 +31,7 @@ class RegisterSwaggerRequest
         description: 'A valid email address.',
         type: 'string',
         format: 'email',
-        example: 'john@example.com',
+        example: 'jane@example.com'
     )]
     public string $email;
 
@@ -42,7 +41,7 @@ class RegisterSwaggerRequest
         type: 'string',
         minLength: 8,
         pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).+$',
-        example: '@p5sSw0rd!'
+        example: 'StrongP@ss123!'
     )]
     public string $password;
 }

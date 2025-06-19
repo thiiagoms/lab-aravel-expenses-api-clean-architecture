@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Src\Application\UseCases\User\Register\Validators;
+namespace Src\Application\UseCases\User\Validators;
 
-use Src\Application\UseCases\User\Register\Exceptions\EmailAlreadyExistsException;
+use Src\Application\UseCases\User\Exceptions\EmailAlreadyExistsException;
 use Src\Application\UseCases\User\Register\Interfaces\VerifyUserEmailIsAvailableInterface;
 use Src\Domain\Repositories\User\Find\FindUserByEmailRepositoryInterface;
 use Src\Domain\User\Entities\User;

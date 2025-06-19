@@ -12,9 +12,7 @@ use Src\Infrastructure\Framework\Laravel\Persistence\User as LaravelUserModel;
 
 final class EloquentRegisterUserRepository extends BaseEloquentRepository implements RegisterUserRepositoryInterface
 {
-    /**
-     * @var LaravelUserModel
-     */
+    /** @var LaravelUserModel */
     protected $model = LaravelUserModel::class;
 
     public function save(User $user): User
