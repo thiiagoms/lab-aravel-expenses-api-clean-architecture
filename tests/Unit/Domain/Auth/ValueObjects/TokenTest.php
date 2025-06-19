@@ -9,6 +9,30 @@ use Src\Domain\Auth\ValueObjects\Token;
 class TokenTest extends TestCase
 {
     #[Test]
+    public function it_should_create_token(): void
+    {
+        $token = new Token('jwt.token.string', 'Bearer', 3600);
+
+        $this->assertEquals('jwt.token.string', $token->token());
+        $this->assertEquals('Bearer', $token->type());
+        $this->assertEquals(3600, $token->expiresIn());
+    }
+
+    #[Test]
+    public function it_should_parse_token_data_into_array(): void
+    {
+        $token = new Token('jwt.token.string', 'Bearer', 3600);
+
+        $expectedData = [
+            'token' => 'jwt.token.string',
+            'type' => 'Bearer',
+            'expiresIn' => 3600,
+        ];
+
+        $this->assertSame($expectedData, $token->toArray());
+    }
+
+    #[Test]
     public function it_should_throw_exception_when_token_is_empty(): void
     {
         $this->expectException(\InvalidArgumentException::class);

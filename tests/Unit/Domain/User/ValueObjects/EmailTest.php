@@ -38,7 +38,21 @@ final class EmailTest extends TestCase
     {
         $email = new Email('ilovelaravel@gmail.com');
 
-        $this->assertInstanceOf(Email::class, $email);
         $this->assertSame('ilovelaravel@gmail.com', $email->getValue());
+    }
+
+    public static function emailProvided(): array
+    {
+        return [
+            [new Email('ilovelaravel@gmail.com'), true],
+            [new Email('ilovephp@gmail.com'), false],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('emailProvided')]
+    public function it_should_validate_email_matches(Email $email, bool $emailMatch): void
+    {
+        $this->assertSame($emailMatch, (new Email('ilovelaravel@gmail.com'))->equals($email));
     }
 }
