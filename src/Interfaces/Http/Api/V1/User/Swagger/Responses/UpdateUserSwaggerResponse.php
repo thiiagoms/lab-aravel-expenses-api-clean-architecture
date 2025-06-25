@@ -4,6 +4,9 @@ namespace Src\Interfaces\Http\Api\V1\User\Swagger\Responses;
 
 use OpenApi\Attributes as OA;
 
+/**
+ * @codeCoverageIgnore
+ */
 #[OA\Schema(
     title: 'Update user response',
     description: 'Response returned after a successful user update.',

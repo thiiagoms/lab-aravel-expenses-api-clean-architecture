@@ -7,7 +7,7 @@ namespace Src\Interfaces\Http\Api\V1\User\Controllers\Profile;
 use OpenApi\Attributes as OA;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Property;
-use Src\Application\UseCases\User\Find\Interface\FindUserByIdActionInterface;
+use Src\Application\UseCases\User\Profile\ProfileAction;
 use Src\Domain\ValueObjects\Id;
 use Src\Interfaces\Http\Api\V1\User\Requests\Profile\ProfileApiRequest;
 use Src\Interfaces\Http\Api\V1\User\Resources\UserResource;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ProfileApiController extends Controller
 {
-    public function __construct(private readonly FindUserByIdActionInterface $action) {}
+    public function __construct(private readonly ProfileAction $action) {}
 
     #[OA\Get(
         path: '/api/v1/user/profile',

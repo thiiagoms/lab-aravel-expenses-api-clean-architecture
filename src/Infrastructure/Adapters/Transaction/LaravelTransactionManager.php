@@ -21,7 +21,6 @@ final class LaravelTransactionManager implements TransactionManagerInterface
             return $result;
         } catch (\Exception $e) {
             $this->rollback();
-
             throw $e;
         }
     }

@@ -4,6 +4,9 @@ namespace Src\Interfaces\Http\Api\V1\User\Swagger\Responses;
 
 use OpenApi\Attributes as OA;
 
+/**
+ * @codeCoverageIgnore
+ */
 #[OA\Schema(
     title: 'User response',
     description: 'Base response for user CRUD operations',

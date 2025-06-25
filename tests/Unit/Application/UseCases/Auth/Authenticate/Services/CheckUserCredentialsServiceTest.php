@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Unit\Application\UseCases\Auth\Authenticate\Validators;
+namespace Tests\Unit\Application\UseCases\Auth\Authenticate\Services;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Src\Application\UseCases\Auth\Authenticate\DTO\AuthenticateDTO;
-use Src\Application\UseCases\Auth\Authenticate\Validators\CheckUserCredentials;
+use Src\Application\UseCases\Auth\Authenticate\Services\CheckUserCredentialsService;
 use Src\Domain\Repositories\User\Find\FindUserByEmailRepositoryInterface;
 use Src\Domain\User\Entities\User;
 use Src\Domain\User\Status\Implementations\Active;
@@ -14,13 +14,13 @@ use Src\Domain\User\ValueObjects\Email;
 use Src\Domain\User\ValueObjects\Name;
 use Src\Domain\User\ValueObjects\Password;
 
-class CheckUserCredentialsTest extends TestCase
+class CheckUserCredentialsServiceTest extends TestCase
 {
     private AuthenticateDTO $dto;
 
     private FindUserByEmailRepositoryInterface $repository;
 
-    private CheckUserCredentials $credentials;
+    private CheckUserCredentialsService $credentials;
 
     /**
      * @throws Exception
@@ -34,7 +34,7 @@ class CheckUserCredentialsTest extends TestCase
 
         $this->repository = $this->createMock(FindUserByEmailRepositoryInterface::class);
 
-        $this->credentials = new CheckUserCredentials($this->repository);
+        $this->credentials = new CheckUserCredentialsService($this->repository);
     }
 
     #[Test]

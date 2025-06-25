@@ -10,7 +10,7 @@ use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
 use Src\Application\UseCases\User\Register\DTO\RegisterUserDTO;
-use Src\Application\UseCases\User\Register\Interfaces\RegisterUserActionInterface;
+use Src\Application\UseCases\User\Register\RegisterUserAction;
 use Src\Interfaces\Http\Api\V1\User\Requests\Register\RegisterUserApiRequest;
 use Src\Interfaces\Http\Api\V1\User\Resources\UserResource;
 use Src\Interfaces\Http\Controller;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class RegisterUserApiController extends Controller
 {
-    public function __construct(private readonly RegisterUserActionInterface $action) {}
+    public function __construct(private readonly RegisterUserAction $action) {}
 
     #[Post(
         path: '/api/v1/register',

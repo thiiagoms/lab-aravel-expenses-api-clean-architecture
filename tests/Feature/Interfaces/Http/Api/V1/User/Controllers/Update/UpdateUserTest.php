@@ -175,7 +175,9 @@ class UpdateUserTest extends TestCase
     #[DataProvider('invalidUserEmailProvider')]
     public function it_should_validate_user_email_when_email_is_provided(string $email, \Closure $response): void
     {
-        $user = LaravelUserModel::factory()->createOne(['email' => new Email('ilovelaravel@gmail.com')]);
+        LaravelUserModel::factory()->createOne(['email' => new Email('ilovelaravel@gmail.com')]);
+
+        $user = LaravelUserModel::factory()->createOne();
 
         auth('api')->attempt(['email' => $user->email->getValue(), 'password' => '@p5sSw0rd!']);
 

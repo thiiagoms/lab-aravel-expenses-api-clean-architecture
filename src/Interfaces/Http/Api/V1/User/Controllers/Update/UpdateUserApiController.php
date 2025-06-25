@@ -6,7 +6,7 @@ namespace Src\Interfaces\Http\Api\V1\User\Controllers\Update;
 
 use OpenApi\Attributes as OA;
 use Src\Application\UseCases\User\Update\DTO\UpdateUserDTO;
-use Src\Application\UseCases\User\Update\Interfaces\UpdateUserActionInterface;
+use Src\Application\UseCases\User\Update\UpdateUserAction;
 use Src\Interfaces\Http\Api\V1\User\Requests\Update\UpdateUserApiRequest;
 use Src\Interfaces\Http\Api\V1\User\Resources\UserResource;
 use Src\Interfaces\Http\Controller;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class UpdateUserApiController extends Controller
 {
-    public function __construct(private readonly UpdateUserActionInterface $action) {}
+    public function __construct(private readonly UpdateUserAction $action) {}
 
     #[OA\Patch(
         path: '/api/v1/user/profile',

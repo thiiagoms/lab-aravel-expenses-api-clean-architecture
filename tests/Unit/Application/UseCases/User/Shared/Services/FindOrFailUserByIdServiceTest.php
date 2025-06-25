@@ -1,15 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Tests\Unit\Application\UseCases\User\Find;
+namespace Tests\Unit\Application\UseCases\User\Shared\Services;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Src\Application\UseCases\User\Exceptions\UserNotFoundException;
-use Src\Application\UseCases\User\Find\FindUserByIdAction;
+use Src\Application\UseCases\User\Shared\Services\FindOrFailUserByIdService;
 use Src\Domain\Repositories\User\Find\FindUserByIdRepositoryInterface;
 use Src\Domain\User\Entities\User;
 use Src\Domain\User\ValueObjects\Email;
@@ -17,13 +15,13 @@ use Src\Domain\User\ValueObjects\Name;
 use Src\Domain\User\ValueObjects\Password;
 use Src\Domain\ValueObjects\Id;
 
-class FindUserByIdActionTest extends TestCase
+class FindOrFailUserByIdServiceTest extends TestCase
 {
     private Id $id;
 
     private FindUserByIdRepositoryInterface|MockObject $repository;
 
-    private FindUserByIdAction $action;
+    private FindOrFailUserByIdService $service;
 
     /**
      * @throws Exception
@@ -34,7 +32,7 @@ class FindUserByIdActionTest extends TestCase
 
         $this->repository = $this->createMock(FindUserByIdRepositoryInterface::class);
 
-        $this->action = new FindUserByIdAction($this->repository);
+        $this->service = new FindOrFailUserByIdService($this->repository);
     }
 
     #[Test]
@@ -49,7 +47,7 @@ class FindUserByIdActionTest extends TestCase
         $this->expectException(UserNotFoundException::class);
         $this->expectExceptionMessage('User not found');
 
-        $this->action->handle($this->id);
+        $this->service->findOrFail($this->id);
     }
 
     #[Test]
@@ -68,7 +66,7 @@ class FindUserByIdActionTest extends TestCase
             ->with($this->id)
             ->willReturn($user);
 
-        $result = $this->action->handle($this->id);
+        $result = $this->service->findOrFail($this->id);
 
         $this->assertEquals($this->id, $result->id());
     }

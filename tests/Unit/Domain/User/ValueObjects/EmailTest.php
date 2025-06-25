@@ -50,9 +50,11 @@ final class EmailTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('emailProvided')]
+    #[DataProvider('emailEqualityCases')]
     public function it_should_validate_email_matches(Email $email, bool $emailMatch): void
     {
-        $this->assertSame($emailMatch, (new Email('ilovelaravel@gmail.com'))->equals($email));
+        $emailValueObject = new Email('ilovelaravel@gmail.com');
+
+        $this->assertSame($emailMatch, $emailValueObject->equals($email));
     }
 }
