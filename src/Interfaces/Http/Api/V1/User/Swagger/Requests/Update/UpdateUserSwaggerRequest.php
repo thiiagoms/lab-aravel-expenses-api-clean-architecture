@@ -4,6 +4,9 @@ namespace Src\Interfaces\Http\Api\V1\User\Swagger\Requests\Update;
 
 use OpenApi\Attributes as OA;
 
+/**
+ * @codeCoverageIgnore
+ */
 #[OA\Schema(
     title: 'Update user data request with PUT/PATCH HTTP methods',
     description: 'Payload to partial/fully update the authenticated user data. For PUT request all fields are required.',

@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Src\Application\UseCases\User\Validators;
+namespace Src\Application\UseCases\User\Shared\Validators;
 
 use Src\Application\UseCases\User\Exceptions\EmailAlreadyExistsException;
-use Src\Application\UseCases\User\Register\Interfaces\VerifyUserEmailIsAvailableInterface;
 use Src\Domain\Repositories\User\Find\FindUserByEmailRepositoryInterface;
 use Src\Domain\User\Entities\User;
 use Src\Domain\User\ValueObjects\Email;
 
-final readonly class VerifyUserEmailIsAvailable implements VerifyUserEmailIsAvailableInterface
+readonly class VerifyUserEmailIsAvailable
 {
     public function __construct(private FindUserByEmailRepositoryInterface $repository) {}
 
@@ -19,7 +18,7 @@ final readonly class VerifyUserEmailIsAvailable implements VerifyUserEmailIsAvai
         $user = $this->repository->find($email);
 
         if ($user instanceof User) {
-            throw EmailAlreadyExistsException::create($email);
+            throw EmailAlreadyExistsException::create();
         }
     }
 }

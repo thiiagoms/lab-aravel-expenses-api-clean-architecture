@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Src\Interfaces\Http\Api\V1\User\Controllers\Register;
 
+use Exception;
 use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes\Get;
 use OpenApi\Attributes\JsonContent;
@@ -11,7 +12,8 @@ use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\Response;
 use OpenApi\Attributes\Schema;
-use Src\Application\UseCases\User\Register\Interfaces\ConfirmUserEmailActionInterface;
+use Src\Application\UseCases\User\Exceptions\UserNotFoundException;
+use Src\Application\UseCases\User\Register\ConfirmUserEmailAction;
 use Src\Domain\ValueObjects\Id;
 use Src\Interfaces\Http\Api\V1\User\Requests\Register\ConfirmEmailApiRequest;
 use Src\Interfaces\Http\Controller;
@@ -19,8 +21,11 @@ use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 final class ConfirmEmailApiController extends Controller
 {
-    public function __construct(private readonly ConfirmUserEmailActionInterface $action) {}
+    public function __construct(private readonly ConfirmUserEmailAction $action) {}
 
+    /**
+     * @throws UserNotFoundException|Exception
+     */
     #[Get(
         path: '/api/v1/email-confirmation',
         operationId: 'confirmUserEmail',

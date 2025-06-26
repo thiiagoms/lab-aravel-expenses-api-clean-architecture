@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Application\UseCases\User\Validators;
+namespace Tests\Unit\Application\UseCases\User\Shared\Validators;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Src\Application\UseCases\User\Exceptions\EmailAlreadyExistsException;
-use Src\Application\UseCases\User\Validators\VerifyUserEmailIsAvailable;
+use Src\Application\UseCases\User\Shared\Validators\VerifyUserEmailIsAvailable;
 use Src\Domain\Repositories\User\Find\FindUserByEmailRepositoryInterface;
 use Src\Domain\User\Entities\User;
 use Src\Domain\User\ValueObjects\Email;

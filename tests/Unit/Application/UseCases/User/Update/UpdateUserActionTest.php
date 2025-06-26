@@ -8,13 +8,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Src\Application\UseCases\User\Exceptions\EmailAlreadyExistsException;
 use Src\Application\UseCases\User\Exceptions\UserNotFoundException;
-use Src\Application\UseCases\User\Find\Interface\FindUserByIdActionInterface;
-use Src\Application\UseCases\User\Register\Interfaces\VerifyUserEmailIsAvailableInterface;
 use Src\Application\UseCases\User\Update\DTO\UpdateUserDTO;
-use Src\Application\UseCases\User\Update\Services\UserEntityUpdater;
+use Src\Application\UseCases\User\Update\Services\UpdateUserService;
 use Src\Application\UseCases\User\Update\UpdateUserAction;
 use Src\Domain\Repositories\Transaction\TransactionManagerInterface;
-use Src\Domain\Repositories\User\Update\UpdateUserRepositoryInterface;
 use Src\Domain\User\Entities\User;
 use Src\Domain\User\ValueObjects\Email;
 use Src\Domain\User\ValueObjects\Name;
@@ -23,11 +20,7 @@ use Src\Domain\ValueObjects\Id;
 
 final class UpdateUserActionTest extends TestCase
 {
-    private FindUserByIdActionInterface|MockObject $findUserByIdAction;
-
-    private VerifyUserEmailIsAvailableInterface|MockObject $userEmailIsAvailable;
-
-    private UpdateUserRepositoryInterface|MockObject $repository;
+    private UpdateUserService|MockObject $service;
 
     private TransactionManagerInterface|MockObject $transactionManager;
 
@@ -42,17 +35,11 @@ final class UpdateUserActionTest extends TestCase
     {
         $this->id = new Id('1b7b3983-582d-4fea-b37e-f9a835d430fa');
 
-        $this->findUserByIdAction = $this->createMock(FindUserByIdActionInterface::class);
-        $this->userEmailIsAvailable = $this->createMock(VerifyUserEmailIsAvailableInterface::class);
-        $this->repository = $this->createMock(UpdateUserRepositoryInterface::class);
+        $this->service = $this->createMock(UpdateUserService::class);
+
         $this->transactionManager = $this->createMock(TransactionManagerInterface::class);
 
-        $this->action = new UpdateUserAction(
-            findUserByIdAction: $this->findUserByIdAction,
-            userEmailIsAvailable: $this->userEmailIsAvailable,
-            repository: $this->repository,
-            transactionManager: $this->transactionManager
-        );
+        $this->action = new UpdateUserAction(service: $this->service, transactionManager: $this->transactionManager);
     }
 
     /**
@@ -66,31 +53,13 @@ final class UpdateUserActionTest extends TestCase
             name: new Name('New Name')
         );
 
-        $existingUser = $this->getUserMock();
+        $userMock = $this->getUserMock(name: $dto->name());
 
-        $this->findUserByIdAction
-            ->expects($this->once())
-            ->method('handle')
-            ->with($this->id)
-            ->willReturn($existingUser);
-
-        $this->userEmailIsAvailable
-            ->expects($this->atMost(0))
-            ->method('verify');
-
-        $user = UserEntityUpdater::update($existingUser, $dto);
-
-        $this->repository
+        $this->service
             ->expects($this->once())
             ->method('update')
-            ->willReturn(new User(
-                name: $dto->name(),
-                email: $user->email(),
-                password: $user->password(),
-                id: $user->id(),
-                createdAt: $user->createdAt(),
-                updatedAt: now()->toDateTimeImmutable()
-            ));
+            ->with($dto)
+            ->willReturn($userMock);
 
         $this->transactionManager
             ->expects($this->once())
@@ -99,12 +68,10 @@ final class UpdateUserActionTest extends TestCase
 
         $result = $this->action->handle($dto);
 
-        $this->assertEquals($existingUser->id()->getValue(), $result->id()->getValue());
+        $this->assertEquals($dto->id()->getValue(), $result->id()->getValue());
         $this->assertEquals($dto->name()->getValue(), $result->name()->getValue());
-        $this->assertEquals($existingUser->email()->getValue(), $result->email()->getValue());
-        $this->assertEquals($existingUser->password()->getValue(), $result->password()->getValue());
-        $this->assertEquals($existingUser->role(), $result->role());
-        $this->assertNotEquals($existingUser->name()->getValue(), $result->name()->getValue());
+        $this->assertEquals($userMock->email()->getValue(), $result->email()->getValue());
+        $this->assertEquals($userMock->password()->getValue(), $result->password()->getValue());
     }
 
     /**
@@ -118,32 +85,13 @@ final class UpdateUserActionTest extends TestCase
             email: new Email('ilovelaravel@gmail.com')
         );
 
-        $existingUser = $this->getUserMock();
+        $userMock = $this->getUserMock(email: $dto->email());
 
-        $this->findUserByIdAction
-            ->expects($this->once())
-            ->method('handle')
-            ->with($this->id)
-            ->willReturn($existingUser);
-
-        $this->userEmailIsAvailable
-            ->expects($this->once())
-            ->method('verify')
-            ->with($dto->email());
-
-        $user = UserEntityUpdater::update($existingUser, $dto);
-
-        $this->repository
+        $this->service
             ->expects($this->once())
             ->method('update')
-            ->willReturn(new User(
-                name: $user->name(),
-                email: $dto->email(),
-                password: $user->password(),
-                id: $user->id(),
-                createdAt: $user->createdAt(),
-                updatedAt: now()->toDateTimeImmutable()
-            ));
+            ->with($dto)
+            ->willReturn($userMock);
 
         $this->transactionManager
             ->expects($this->once())
@@ -152,12 +100,10 @@ final class UpdateUserActionTest extends TestCase
 
         $result = $this->action->handle($dto);
 
-        $this->assertEquals($existingUser->id()->getValue(), $result->id()->getValue());
-        $this->assertEquals($existingUser->name()->getValue(), $result->name()->getValue());
+        $this->assertEquals($dto->id()->getValue(), $result->id()->getValue());
         $this->assertEquals($dto->email()->getValue(), $result->email()->getValue());
-        $this->assertEquals($existingUser->password()->getValue(), $result->password()->getValue());
-        $this->assertEquals($existingUser->role(), $result->role());
-        $this->assertNotEquals($existingUser->email()->getValue(), $result->email()->getValue());
+        $this->assertEquals($userMock->name()->getValue(), $result->name()->getValue());
+        $this->assertEquals($userMock->password()->getValue(), $result->password()->getValue());
     }
 
     /**
@@ -171,31 +117,13 @@ final class UpdateUserActionTest extends TestCase
             password: new Password('P4ZZY!@#!@WE$#@$!)___.SADASQ#E#DSAD#$@(#$SSw0rd!@#dASD_')
         );
 
-        $existingUser = $this->getUserMock();
+        $userMock = $this->getUserMock(password: $dto->password());
 
-        $this->findUserByIdAction
-            ->expects($this->once())
-            ->method('handle')
-            ->with($this->id)
-            ->willReturn($existingUser);
-
-        $this->userEmailIsAvailable
-            ->expects($this->atMost(0))
-            ->method('verify');
-
-        $user = UserEntityUpdater::update($existingUser, $dto);
-
-        $this->repository
+        $this->service
             ->expects($this->once())
             ->method('update')
-            ->willReturn(new User(
-                name: $user->name(),
-                email: $user->email(),
-                password: $dto->password(),
-                id: $user->id(),
-                createdAt: $user->createdAt(),
-                updatedAt: now()->toDateTimeImmutable()
-            ));
+            ->with($dto)
+            ->willReturn($userMock);
 
         $this->transactionManager
             ->expects($this->once())
@@ -204,18 +132,11 @@ final class UpdateUserActionTest extends TestCase
 
         $result = $this->action->handle($dto);
 
-        $this->assertEquals($existingUser->id()->getValue(), $result->id()->getValue());
-        $this->assertEquals($existingUser->name()->getValue(), $result->name()->getValue());
-        $this->assertEquals($existingUser->email()->getValue(), $result->email()->getValue());
+        $this->assertEquals($dto->id()->getValue(), $result->id()->getValue());
         $this->assertEquals($dto->password()->getValue(), $result->password()->getValue());
-        $this->assertEquals($existingUser->role(), $result->role());
-        $this->assertNotEquals($existingUser->password()->getValue(), $result->password()->getValue());
-        $this->assertTrue(
-            $result
-                ->password()
-                ->verifyPasswordMatch('P4ZZY!@#!@WE$#@$!)___.SADASQ#E#DSAD#$@(#$SSw0rd!@#dASD_')
-        );
-        $this->assertFalse($result->password()->verifyPasswordMatch('P4SSw0rd!@#dASD_'));
+        $this->assertEquals($userMock->name()->getValue(), $result->name()->getValue());
+        $this->assertEquals($userMock->email()->getValue(), $result->email()->getValue());
+        $this->assertEquals($userMock->password()->getValue(), $result->password()->getValue());
     }
 
     /**
@@ -231,32 +152,17 @@ final class UpdateUserActionTest extends TestCase
             password: new Password('P4ZZY!@#!@WE$#@$!)___.SADASQ#E#DSAD#$@(#$SSw0rd!@#dASD_')
         );
 
-        $existingUser = $this->getUserMock();
+        $userMock = $this->getUserMock(
+            name: $dto->name(),
+            email: $dto->email(),
+            password: $dto->password()
+        );
 
-        $this->findUserByIdAction
-            ->expects($this->once())
-            ->method('handle')
-            ->with($this->id)
-            ->willReturn($existingUser);
-
-        $this->userEmailIsAvailable
-            ->expects($this->once())
-            ->method('verify')
-            ->with($dto->email());
-
-        $user = UserEntityUpdater::update($existingUser, $dto);
-
-        $this->repository
+        $this->service
             ->expects($this->once())
             ->method('update')
-            ->willReturn(new User(
-                name: $dto->name(),
-                email: $dto->email(),
-                password: $dto->password(),
-                id: $user->id(),
-                createdAt: $user->createdAt(),
-                updatedAt: now()->toDateTimeImmutable()
-            ));
+            ->with($dto)
+            ->willReturn($userMock);
 
         $this->transactionManager
             ->expects($this->once())
@@ -265,20 +171,10 @@ final class UpdateUserActionTest extends TestCase
 
         $result = $this->action->handle($dto);
 
-        $this->assertEquals($existingUser->id()->getValue(), $result->id()->getValue());
+        $this->assertEquals($dto->id()->getValue(), $result->id()->getValue());
         $this->assertEquals($dto->name()->getValue(), $result->name()->getValue());
         $this->assertEquals($dto->email()->getValue(), $result->email()->getValue());
         $this->assertEquals($dto->password()->getValue(), $result->password()->getValue());
-        $this->assertEquals($existingUser->role(), $result->role());
-        $this->assertTrue(
-            $result
-                ->password()
-                ->verifyPasswordMatch('P4ZZY!@#!@WE$#@$!)___.SADASQ#E#DSAD#$@(#$SSw0rd!@#dASD_')
-        );
-        $this->assertNotEquals($existingUser->name()->getValue(), $result->name()->getValue());
-        $this->assertNotEquals($existingUser->email()->getValue(), $result->email()->getValue());
-        $this->assertNotEquals($existingUser->password()->getValue(), $result->password()->getValue());
-        $this->assertFalse($result->password()->verifyPasswordMatch('P4SSw0rd!@#dASD_'));
     }
 
     /**
@@ -287,30 +183,18 @@ final class UpdateUserActionTest extends TestCase
     #[Test]
     public function it_should_return_user_not_found_exception_when_user_does_not_exist(): void
     {
-        $dto = new UpdateUserDTO(
-            id: $this->id,
-            name: new Name('New Name'),
-            email: new Email('ilovelaravel@gmail.com'),
-            password: new Password('P4ZZY!@#!@WE$#@$!)___.SADASQ#E#DSAD#$@(#$SSw0rd!@#dASD_')
-        );
+        $dto = new UpdateUserDTO(id: $this->id);
 
-        $this->findUserByIdAction
+        $this->service
             ->expects($this->once())
-            ->method('handle')
-            ->with($this->id)
+            ->method('update')
+            ->with($dto)
             ->willThrowException(UserNotFoundException::create('User not found '));
 
-        $this->userEmailIsAvailable
-            ->expects($this->atMost(0))
-            ->method('verify');
-
-        $this->repository
-            ->expects($this->atMost(0))
-            ->method('update');
-
         $this->transactionManager
-            ->expects($this->atMost(0))
-            ->method('makeTransaction');
+            ->expects($this->once())
+            ->method('makeTransaction')
+            ->willReturnCallback(fn (callable $callback) => $callback());
 
         $this->expectException(UserNotFoundException::class);
         $this->expectExceptionMessage('User not found');
@@ -331,27 +215,16 @@ final class UpdateUserActionTest extends TestCase
             password: new Password('P4ZZY!@#!@WE$#@$!)___.SADASQ#E#DSAD#$@(#$SSw0rd!@#dASD_')
         );
 
-        $existingUser = $this->getUserMock();
-
-        $this->findUserByIdAction
+        $this->service
             ->expects($this->once())
-            ->method('handle')
-            ->with($this->id)
-            ->willReturn($existingUser);
-
-        $this->userEmailIsAvailable
-            ->expects($this->once())
-            ->method('verify')
-            ->with($dto->email())
+            ->method('update')
+            ->with($dto)
             ->willThrowException(EmailAlreadyExistsException::create());
 
-        $this->repository
-            ->expects($this->atMost(0))
-            ->method('update');
-
         $this->transactionManager
-            ->expects($this->atMost(0))
-            ->method('makeTransaction');
+            ->expects($this->once())
+            ->method('makeTransaction')
+            ->willReturnCallback(fn (callable $callback) => $callback());
 
         $this->expectException(EmailAlreadyExistsException::class);
         $this->expectExceptionMessage('User with provided e-mail already exists');
@@ -359,12 +232,41 @@ final class UpdateUserActionTest extends TestCase
         $this->action->handle($dto);
     }
 
-    private function getUserMock(): User
+    #[Test]
+    public function it_should_throw_exception_when_transaction_fails(): void
     {
+        $dto = new UpdateUserDTO(
+            id: $this->id,
+            name: new Name('New Name'),
+            email: new Email('ilovelaravel@gmail.com'),
+            password: new Password('P4ZZY!@#!@WE$#@$!)___.SADASQ#E#DSAD#$@(#$SSw0rd!@#dASD_')
+        );
+
+        $this->service
+            ->expects($this->never())
+            ->method('update');
+
+        $this->transactionManager
+            ->expects($this->once())
+            ->method('makeTransaction')
+            ->willThrowException(new \Exception('Transaction failed'));
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Transaction failed');
+
+        $this->action->handle($dto);
+    }
+
+    private function getUserMock(?Name $name = null, ?Email $email = null, ?Password $password = null): User
+    {
+        $name = $name ?? new Name(fake()->name());
+        $email = $email ?? new Email(fake()->freeEmail());
+        $password = $password ?? new Password('P4SSw0rd!@#dASD_');
+
         return new User(
-            name: new Name(fake()->name()),
-            email: new Email(fake()->email()),
-            password: new Password('P4SSw0rd!@#dASD_'),
+            name: $name,
+            email: $email,
+            password: $password,
             id: $this->id,
             createdAt: now()->toDateTimeImmutable(),
             updatedAt: now()->toDateTimeImmutable()

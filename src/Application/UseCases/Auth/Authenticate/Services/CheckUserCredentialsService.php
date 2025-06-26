@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Src\Application\UseCases\Auth\Authenticate\Validators;
+namespace Src\Application\UseCases\Auth\Authenticate\Services;
 
 use Src\Application\UseCases\Auth\Authenticate\DTO\AuthenticateDTO;
-use Src\Application\UseCases\Auth\Authenticate\Interfaces\CheckUserCredentialsInterface;
 use Src\Domain\Repositories\User\Find\FindUserByEmailRepositoryInterface;
 use Src\Domain\User\Entities\User;
 use Src\Domain\User\ValueObjects\Email;
 
-final class CheckUserCredentials implements CheckUserCredentialsInterface
+class CheckUserCredentialsService
 {
     private ?User $user;
 
@@ -23,13 +22,13 @@ final class CheckUserCredentials implements CheckUserCredentialsInterface
     {
         $user = $this->getUserByEmail($dto->email());
 
-        if ($this->hasValidationFailed($user, $dto)) {
-            return false;
+        if ($this->canAuthenticate($user, $dto)) {
+            $this->user = $user;
+
+            return true;
         }
 
-        $this->user = $user;
-
-        return true;
+        return false;
     }
 
     public function getAuthenticatedUser(): ?User
@@ -37,9 +36,11 @@ final class CheckUserCredentials implements CheckUserCredentialsInterface
         return $this->user;
     }
 
-    private function hasValidationFailed(?User $user, AuthenticateDTO $dto): bool
+    private function canAuthenticate(?User $user, AuthenticateDTO $dto): bool
     {
-        return ! $user || ! $this->isPasswordValid($user, $dto) || ! $this->canUserAuthenticate($user);
+        return ! is_null($user)
+            && $this->passwordMatch($user, $dto)
+            && $this->userIsActiveAndVerified($user);
     }
 
     private function getUserByEmail(Email $email): ?User
@@ -47,12 +48,12 @@ final class CheckUserCredentials implements CheckUserCredentialsInterface
         return $this->repository->find($email);
     }
 
-    private function isPasswordValid(User $user, AuthenticateDTO $dto): bool
+    private function passwordMatch(User $user, AuthenticateDTO $dto): bool
     {
         return $user->password()->verifyPasswordMatch($dto->password()->getValue());
     }
 
-    private function canUserAuthenticate(User $user): bool
+    private function userIsActiveAndVerified(User $user): bool
     {
         return $user->status()->getStatus()->isActive() && $user->isEmailAlreadyConfirmed();
     }

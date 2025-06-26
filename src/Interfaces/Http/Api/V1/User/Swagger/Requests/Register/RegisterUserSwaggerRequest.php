@@ -4,6 +4,9 @@ namespace Src\Interfaces\Http\Api\V1\User\Swagger\Requests\Register;
 
 use OpenApi\Attributes as OA;
 
+/**
+ * @codeCoverageIgnore
+ */
 #[OA\Schema(
     title: 'Register user request',
     description: 'Base request for user register operation.',

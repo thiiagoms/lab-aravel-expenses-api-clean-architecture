@@ -4,6 +4,9 @@ namespace Src\Interfaces\Http\Api\V1\Auth\Swagger\Requests;
 
 use OpenApi\Attributes as OA;
 
+/**
+ * @codeCoverageIgnore
+ */
 #[OA\Schema(
     title: 'Authenticate user request',
     description: 'Base request for user authentication operation.',

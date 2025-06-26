@@ -2,26 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Src\Application\UseCases\User\Find;
+namespace Src\Application\UseCases\User\Shared\Services;
 
 use Src\Application\UseCases\User\Exceptions\UserNotFoundException;
 use Src\Domain\Repositories\User\Find\FindUserByIdRepositoryInterface;
 use Src\Domain\User\Entities\User;
 use Src\Domain\ValueObjects\Id;
 
-final readonly class FindUserByIdAction implements Interface\FindUserByIdActionInterface
+readonly class FindOrFailUserByIdService
 {
     public function __construct(private FindUserByIdRepositoryInterface $repository) {}
 
     /**
-     * Handle the action to find a user by their ID.
-     *
-     * @param  Id  $id  The ID of the user to find.
-     * @return User The found user entity.
-     *
-     * @throws UserNotFoundException If the user is not found.
+     * @throws UserNotFoundException
      */
-    public function handle(Id $id): User
+    public function findOrFail(Id $id): User
     {
         $user = $this->repository->find($id);
 

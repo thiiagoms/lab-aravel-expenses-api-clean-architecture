@@ -4,6 +4,9 @@ namespace Src\Interfaces\Http\Api\V1\Auth\Swagger\Responses;
 
 use OpenApi\Attributes as OA;
 
+/**
+ * @codeCoverageIgnore
+ */
 #[OA\Schema(
     title: 'Token for authenticate user request',
     description: 'Response containing authentication token',

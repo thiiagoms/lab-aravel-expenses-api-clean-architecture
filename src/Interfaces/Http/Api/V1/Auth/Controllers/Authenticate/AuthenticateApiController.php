@@ -4,8 +4,8 @@ namespace Src\Interfaces\Http\Api\V1\Auth\Controllers\Authenticate;
 
 use OpenApi\Attributes as OA;
 use OpenApi\Attributes\JsonContent;
+use Src\Application\UseCases\Auth\Authenticate\AuthenticateAction;
 use Src\Application\UseCases\Auth\Authenticate\DTO\AuthenticateDTO;
-use Src\Application\UseCases\Auth\Authenticate\Interfaces\AuthenticateActionInterface;
 use Src\Interfaces\Http\Api\V1\Auth\Requests\Authenticate\AuthenticateRequest;
 use Src\Interfaces\Http\Api\V1\Auth\Resources\TokenResource;
 use Src\Interfaces\Http\Controller;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class AuthenticateApiController extends Controller
 {
-    public function __construct(private readonly AuthenticateActionInterface $action) {}
+    public function __construct(private readonly AuthenticateAction $action) {}
 
     #[OA\Post(
         path: '/api/v1/auth/login',

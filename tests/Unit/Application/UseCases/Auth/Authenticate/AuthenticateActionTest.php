@@ -8,7 +8,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Src\Application\UseCases\Auth\Authenticate\AuthenticateAction;
 use Src\Application\UseCases\Auth\Authenticate\DTO\AuthenticateDTO;
-use Src\Application\UseCases\Auth\Authenticate\Interfaces\CheckUserCredentialsInterface;
+use Src\Application\UseCases\Auth\Authenticate\Services\CheckUserCredentialsService;
 use Src\Application\UseCases\Auth\Exceptions\InvalidCredentialsException;
 use Src\Application\UseCases\Auth\Token\Interfaces\GenerateTokenInterface;
 use Src\Domain\Auth\ValueObjects\Token;
@@ -22,7 +22,7 @@ final class AuthenticateActionTest extends TestCase
 {
     private AuthenticateDTO $dto;
 
-    private CheckUserCredentialsInterface|MockObject $credentials;
+    private CheckUserCredentialsService|MockObject $credentials;
 
     private GenerateTokenInterface|MockObject $token;
 
@@ -38,7 +38,7 @@ final class AuthenticateActionTest extends TestCase
             password: new Password(password: 'P4sSw0RD!@#ASAD_', hashed: false)
         );
 
-        $this->credentials = $this->createMock(CheckUserCredentialsInterface::class);
+        $this->credentials = $this->createMock(CheckUserCredentialsService::class);
         $this->token = $this->createMock(GenerateTokenInterface::class);
 
         $this->action = new AuthenticateAction(
