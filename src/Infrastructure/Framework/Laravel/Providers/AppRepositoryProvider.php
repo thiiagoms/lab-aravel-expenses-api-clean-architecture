@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Src\Infrastructure\Framework\Laravel\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Src\Domain\Repositories\Expense\Register\RegisterExpenseRepositoryInterface;
 use Src\Domain\Repositories\User\Find\FindUserByEmailRepositoryInterface;
 use Src\Domain\Repositories\User\Find\FindUserByIdRepositoryInterface;
 use Src\Domain\Repositories\User\Register\ConfirmUserEmailRepositoryInterface;
 use Src\Domain\Repositories\User\Register\RegisterUserRepositoryInterface;
 use Src\Domain\Repositories\User\Update\UpdateUserRepositoryInterface;
+use Src\Infrastructure\Adapters\Repositories\ORM\Expense\Register\EloquentRegisterExpenseRepository;
 use Src\Infrastructure\Adapters\Repositories\ORM\User\Find\EloquentFindUserByEmailRepository;
 use Src\Infrastructure\Adapters\Repositories\ORM\User\Find\EloquentFindUserByIdRepository;
 use Src\Infrastructure\Adapters\Repositories\ORM\User\Register\EloquentConfirmUserEmailRepository;
@@ -31,6 +33,8 @@ class AppRepositoryProvider extends ServiceProvider
             RegisterUserRepositoryInterface::class => EloquentRegisterUserRepository::class,
             ConfirmUserEmailRepositoryInterface::class => EloquentConfirmUserEmailRepository::class,
             UpdateUserRepositoryInterface::class => EloquentUpdateUserRepository::class,
+            // Expense
+            RegisterExpenseRepositoryInterface::class => EloquentRegisterExpenseRepository::class,
         ];
 
         foreach ($repositories as $interface => $repository) {

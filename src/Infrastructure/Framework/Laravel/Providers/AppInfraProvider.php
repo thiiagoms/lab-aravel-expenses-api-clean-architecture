@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Src\Infrastructure\Framework\Laravel\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Src\Application\Interfaces\Events\EventDispatcherInterface;
 use Src\Application\Interfaces\Mail\SendUserConfirmationEmailInterface;
 use Src\Application\UseCases\Auth\Token\Interfaces\GenerateTokenInterface;
 use Src\Domain\Repositories\Transaction\TransactionManagerInterface;
 use Src\Infrastructure\Adapters\Services\Auth\JWTTokenGeneratorService;
+use Src\Infrastructure\Adapters\Services\Events\LaravelEventDispatcher;
 use Src\Infrastructure\Adapters\Transaction\LaravelTransactionManager;
 use Src\Infrastructure\Framework\Laravel\Services\Confirm\LaravelSendUserConfirmationEmail;
 
@@ -24,6 +26,7 @@ class AppInfraProvider extends ServiceProvider
             TransactionManagerInterface::class => LaravelTransactionManager::class,
             SendUserConfirmationEmailInterface::class => LaravelSendUserConfirmationEmail::class,
             GenerateTokenInterface::class => JWTTokenGeneratorService::class,
+            EventDispatcherInterface::class => LaravelEventDispatcher::class,
         ];
 
         foreach ($infraProvider as $interface => $implementation) {
