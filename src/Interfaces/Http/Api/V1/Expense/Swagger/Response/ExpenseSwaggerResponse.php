@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Interfaces\Http\Api\V1\Expense\Swagger\Response\Register;
+namespace Src\Interfaces\Http\Api\V1\Expense\Swagger\Response;
 
 use OpenApi\Attributes as OA;
 
@@ -12,7 +12,7 @@ use OpenApi\Attributes as OA;
     description: 'Registered expense response.',
     type: 'object',
 )]
-class RegisteredExpenseSwaggerResponse
+class ExpenseSwaggerResponse
 {
     #[OA\Property(
         title: 'Data',
@@ -23,7 +23,7 @@ class RegisteredExpenseSwaggerResponse
                 title: 'Id',
                 description: 'The unique identifier of the expense.',
                 type: 'string',
-                format: 'uuid',
+                example: '31e7d216-58d3-4fdd-8a87-57c16adbbf63'
             ),
             new OA\Property(
                 property: 'amount',

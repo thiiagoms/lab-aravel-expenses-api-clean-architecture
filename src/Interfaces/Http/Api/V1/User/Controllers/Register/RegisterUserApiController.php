@@ -38,7 +38,7 @@ final class RegisterUserApiController extends Controller
             new \OpenApi\Attributes\Response(
                 response: Response::HTTP_CREATED,
                 description: 'User successfully registered',
-                content: new JsonContent(ref: '#/components/schemas/RegisteredExpenseSwaggerResponse')
+                content: new JsonContent(ref: '#/components/schemas/UserSwaggerResponse')
             ),
             new \OpenApi\Attributes\Response(
                 response: Response::HTTP_UNAUTHORIZED,

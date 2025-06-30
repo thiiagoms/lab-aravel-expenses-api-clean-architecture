@@ -6,6 +6,8 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Exceptions\InvalidSignatureException;
+use Src\Application\UseCases\Expense\Exceptions\ExpenseNotFoundException;
+use Src\Application\UseCases\User\Exceptions\UserNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 

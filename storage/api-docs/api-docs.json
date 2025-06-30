@@ -60,6 +60,49 @@
             }
         },
         "/api/v1/expense": {
+            "get": {
+                "tags": [
+                    "Expense"
+                ],
+                "summary": "Retrieves the detailed expense record for the authenticated user.",
+                "description": "Retrieves the detailed expense record for the authenticated user but only expenses that the authenticated user has permission to view will be returned.",
+                "operationId": "a5eab38b260aa446da4033632151995f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id (uuid) of the expense record to be retrieved.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "31e7d216-58d3-4fdd-8a87-57c16adbbf63"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Expense registered successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExpenseSwaggerResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The server could not process the request due to invalid input."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "scalar": "bearerAuth"
+                    }
+                ]
+            },
             "post": {
                 "tags": [
                     "Expense"
@@ -83,7 +126,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/RegisteredExpenseSwaggerResponse"
+                                    "$ref": "#/components/schemas/ExpenseSwaggerResponse"
                                 }
                             }
                         }
@@ -335,7 +378,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/RegisteredExpenseSwaggerResponse"
+                                    "$ref": "#/components/schemas/UserSwaggerResponse"
                                 }
                             }
                         }
@@ -455,7 +498,7 @@
                     "description": "Expense description example"
                 }
             },
-            "RegisteredExpenseSwaggerResponse": {
+            "ExpenseSwaggerResponse": {
                 "title": "Registered expense response",
                 "description": "Registered expense response.",
                 "properties": {
@@ -467,7 +510,7 @@
                                 "title": "Id",
                                 "description": "The unique identifier of the expense.",
                                 "type": "string",
-                                "format": "uuid"
+                                "example": "31e7d216-58d3-4fdd-8a87-57c16adbbf63"
                             },
                             "amount": {
                                 "title": "Amount",
