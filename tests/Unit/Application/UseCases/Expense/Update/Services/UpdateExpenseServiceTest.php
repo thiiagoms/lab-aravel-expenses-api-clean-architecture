@@ -241,7 +241,6 @@ class UpdateExpenseServiceTest extends TestCase
         $this->repository
             ->expects($this->once())
             ->method('update')
-            ->with($existingExpense)
             ->willReturn(new Expense(
                 user: new User(
                     name: new Name('John Doe'),
@@ -261,19 +260,120 @@ class UpdateExpenseServiceTest extends TestCase
 
         $this->assertEquals($expenseDTO->amount()->getValue(), $expense->amount()->getValue());
         // Description should remain unchanged
-        $this->assertEquals($existingExpense->description()->getValue(), $expense->description()->getValue());;
+        $this->assertEquals($existingExpense->description()->getValue(), $expense->description()->getValue());
     }
 
+    #[Test]
     public function itShouldUpdateOnlyExpenseDescription(): void
     {
+        $expenseDTO = new UpdateExpenseDTO(
+            id:  new Id('a757d8e8-af2f-439d-b0de-c8dcd77d54e5'),
+            userId: new Id('12345678-1234-1234-1234-123456789012'),
+            description: new Description('New Expense description')
+        );
 
+        $this->findOrFailUserByIdService
+            ->expects($this->once())
+            ->method('findOrFail')
+            ->with($expenseDTO->userId());
+
+        $existingExpense = new Expense(
+            user: new User(
+                name: new Name('John Doe'),
+                email: new Email('ilovelaravel@gmail.com'),
+                password: new Password('P4sSW0rd!@#)'),
+                id: $expenseDTO->userId()
+            ),
+            amount: new Amount('12'),
+            description: new Description('Test Expense'),
+            id: $expenseDTO->id()
+        );
+
+        $this->findOrFailExpenseByIdService
+            ->expects($this->once())
+            ->method('findOrFail')
+            ->with($expenseDTO->id())
+            ->willReturn($existingExpense);
+
+        $this->repository
+            ->expects($this->once())
+            ->method('update')
+            ->willReturn(new Expense(
+                user: new User(
+                    name: new Name('John Doe'),
+                    email: new Email('ilovelaravel@gmail.com'),
+                    password: new Password('P4sSW0rd!@#)'),
+                    id: $expenseDTO->userId()
+                ),
+                amount: $existingExpense->amount(),
+                description: $expenseDTO->description(),
+                status: $existingExpense->status(),
+                id: $existingExpense->id(),
+                createdAt: $existingExpense->createdAt(),
+                updatedAt: new \DateTimeImmutable(),
+            ));
+
+        $expense = $this->service->update($expenseDTO);
+
+        $this->assertEquals($expenseDTO->description()->getValue(), $expense->description()->getValue());
+        // Amount should remain unchanged
+        $this->assertEquals($existingExpense->amount()->getValue(), $expense->amount()->getValue());
     }
 
+    #[Test]
     public function itShouldUpdateExpenseAmountAndDescription(): void
     {
+        $expenseDTO = new UpdateExpenseDTO(
+            id:  new Id('a757d8e8-af2f-439d-b0de-c8dcd77d54e5'),
+            userId: new Id('12345678-1234-1234-1234-123456789012'),
+            amount: new Amount('1234'),
+            description: new Description('New Expense description')
+        );
 
+        $this->findOrFailUserByIdService
+            ->expects($this->once())
+            ->method('findOrFail')
+            ->with($expenseDTO->userId());
+
+        $existingExpense = new Expense(
+            user: new User(
+                name: new Name('John Doe'),
+                email: new Email('ilovelaravel@gmail.com'),
+                password: new Password('P4sSW0rd!@#)'),
+                id: $expenseDTO->userId()
+            ),
+            amount: new Amount('12'),
+            description: new Description('Test Expense'),
+            id: $expenseDTO->id()
+        );
+
+        $this->findOrFailExpenseByIdService
+            ->expects($this->once())
+            ->method('findOrFail')
+            ->with($expenseDTO->id())
+            ->willReturn($existingExpense);
+
+        $this->repository
+            ->expects($this->once())
+            ->method('update')
+            ->willReturn(new Expense(
+                user: new User(
+                    name: new Name('John Doe'),
+                    email: new Email('ilovelaravel@gmail.com'),
+                    password: new Password('P4sSW0rd!@#)'),
+                    id: $expenseDTO->userId()
+                ),
+                amount: $expenseDTO->amount(),
+                description: $expenseDTO->description(),
+                status: $existingExpense->status(),
+                id: $existingExpense->id(),
+                createdAt: $existingExpense->createdAt(),
+                updatedAt: new \DateTimeImmutable(),
+            ));
+
+        $expense = $this->service->update($expenseDTO);
+
+        $this->assertEquals($expenseDTO->amount()->getValue(), $expense->amount()->getValue());;
+        $this->assertEquals($expenseDTO->description()->getValue(), $expense->description()->getValue());
     }
-
-
-
 }

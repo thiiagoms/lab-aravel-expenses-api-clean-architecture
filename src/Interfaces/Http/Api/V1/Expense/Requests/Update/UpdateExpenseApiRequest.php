@@ -1,8 +1,7 @@
 <?php
 
-namespace Src\Interfaces\Http\Api\V1\Expense\Requests\Register;
+namespace Src\Interfaces\Http\Api\V1\Expense\Requests\Update;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -12,7 +11,7 @@ use Src\Interfaces\Http\Api\V1\Expense\Rules\AmountIsValidRule;
 use Src\Interfaces\Http\Api\V1\Expense\Rules\DescriptionIsValidRule;
 use Symfony\Component\HttpFoundation\Response;
 
-class RegisterExpenseApiRequest extends FormRequest
+class UpdateExpenseApiRequest extends FormRequest
 {
     /**
      * @throws HttpResponseException
@@ -42,7 +41,7 @@ class RegisterExpenseApiRequest extends FormRequest
         return $user->status()->getStatus()->isActive() && $user->isEmailAlreadyConfirmed();
     }
 
-    public function rules(): array
+    public function put(): array
     {
         return [
             'amount' => [
@@ -55,6 +54,29 @@ class RegisterExpenseApiRequest extends FormRequest
                 new DescriptionIsValidRule,
             ],
         ];
+    }
+
+    public function patch(): array
+    {
+        return [
+            'amount' => [
+                'sometimes',
+                'numeric',
+                new AmountIsValidRule,
+            ],
+            'description' => [
+                'sometimes',
+                new DescriptionIsValidRule,
+            ],
+        ];
+    }
+
+    public function rules(): array
+    {
+        return match ($this->method()) {
+            'PATCH' => $this->patch(),
+            default => $this->put()
+        };
     }
 
     public function messages(): array

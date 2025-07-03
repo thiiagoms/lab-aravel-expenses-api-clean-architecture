@@ -7,8 +7,9 @@ use Src\Interfaces\Http\Api\V1\Expense\Controllers\ExpenseApiController;
 
 Route::controller(ExpenseApiController::class)->middleware(['auth:api'])->group(function (): void {
     Route::get('', 'index')->name('index');
-    Route::get('/{id}', 'show')->name('show');
+    Route::get('/{expense}', 'show')->name('show');
     Route::post('', 'store')->name('store');
+    Route::patch('{expense}', 'update')->name('update');
     Route::put('{id}', 'update')->name('update');
     Route::delete('{id}', 'destroy')->name('destroy');
 });

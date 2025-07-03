@@ -32,6 +32,8 @@ final readonly class UpdateExpenseService
 
         $this->expenseCanBeUpdatedService->canBeUpdate($expense, $dto);
 
+        $expense = ExpenseEntityUpdater::update($expense, $dto);
+
         return $this->repository->update($expense);
     }
 }

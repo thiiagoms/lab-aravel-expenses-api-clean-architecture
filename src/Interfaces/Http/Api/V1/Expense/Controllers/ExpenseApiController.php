@@ -17,8 +17,12 @@ use OpenApi\Attributes\Schema;
 use Src\Application\UseCases\Expense\Register\DTO\RegisterExpenseDTO;
 use Src\Application\UseCases\Expense\Register\RegisterExpenseAction;
 use Src\Application\UseCases\Expense\Retrieve\RetrieveExpenseAction;
+use Src\Application\UseCases\Expense\Update\DTO\UpdateExpenseDTO;
+use Src\Application\UseCases\Expense\Update\UpdateExpenseAction;
 use Src\Domain\ValueObjects\Id;
+use Src\Infrastructure\Framework\Laravel\Persistence\Expense as LaravelExpenseModel;
 use Src\Interfaces\Http\Api\V1\Expense\Requests\Register\RegisterExpenseApiRequest;
+use Src\Interfaces\Http\Api\V1\Expense\Requests\Update\UpdateExpenseApiRequest;
 use Src\Interfaces\Http\Api\V1\Expense\Resources\ExpenseResource;
 use Src\Interfaces\Http\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +31,8 @@ class ExpenseApiController extends Controller
 {
     public function __construct(
         private readonly RegisterExpenseAction $registerExpenseAction,
-        private readonly RetrieveExpenseAction $retrieveExpenseAction
+        private readonly RetrieveExpenseAction $retrieveExpenseAction,
+        private readonly UpdateExpenseAction $updateExpenseAction,
     ) {}
 
     /**
@@ -129,10 +134,19 @@ class ExpenseApiController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @throws Exception
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateExpenseApiRequest $request, LaravelExpenseModel $expense): ExpenseResource
     {
-        //
+        dd($expense->id);
+
+        $dto = UpdateExpenseDTO::fromRequest(request: $request, id: new Id($id));
+
+        dd($dto);
+
+        $expense = $this->updateExpenseAction->handle($dto);
+
+        return ExpenseResource::make($expense);
     }
 
     /**
