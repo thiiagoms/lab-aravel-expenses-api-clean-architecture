@@ -29,7 +29,7 @@ class ExpenseFactory extends Factory
             'user_id' => $user->id->getValue(),
             'amount' => intval(round(rand(1, 1000))),
             'description' => fake()->text(),
-            'status' => Status::APPROVED->value,
+            'status' => Status::PENDING->value,
         ];
     }
 }

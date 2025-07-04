@@ -40,7 +40,7 @@ class AppRepositoryProvider extends ServiceProvider
             // Expense
             RegisterExpenseRepositoryInterface::class => EloquentRegisterExpenseRepository::class,
             FindExpenseByIdRepositoryInterface::class => EloquentFindExpenseByIdRepository::class,
-            UpdateExpenseRepositoryInterface::class => EloquentUpdateExpenseRepository::class
+            UpdateExpenseRepositoryInterface::class => EloquentUpdateExpenseRepository::class,
         ];
 
         foreach ($repositories as $interface => $repository) {

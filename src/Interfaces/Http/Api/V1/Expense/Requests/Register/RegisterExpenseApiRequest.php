@@ -2,7 +2,6 @@
 
 namespace Src\Interfaces\Http\Api\V1\Expense\Requests\Register;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;

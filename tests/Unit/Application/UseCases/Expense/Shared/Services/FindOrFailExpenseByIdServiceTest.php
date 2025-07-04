@@ -40,18 +40,18 @@ class FindOrFailExpenseByIdServiceTest extends TestCase
     public function it_should_return_expense_when_found(): void
     {
         $expense = new Expense(
-            id: $this->id,
             user: new User(
-                id: new Id(fake()->uuid()),
                 name: new Name(fake()->name()),
                 email: new Email(fake()->email()),
                 password: new Password('P$sSWord123_@#'),
+                id: new Id(fake()->uuid()),
                 status: new Active,
                 emailConfirmedAt: now()->toDateTimeImmutable()
             ),
             amount: new Amount('132'),
             description: new Description('Test expense description'),
-            status: new Approve
+            status: new Approve,
+            id: $this->id
         );
 
         $this->repository

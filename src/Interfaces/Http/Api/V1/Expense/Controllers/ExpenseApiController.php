@@ -6,7 +6,6 @@ namespace Src\Interfaces\Http\Api\V1\Expense\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use OpenApi\Attributes\Get;
 use OpenApi\Attributes\JsonContent;
@@ -134,15 +133,14 @@ class ExpenseApiController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
      * @throws Exception
      */
     public function update(UpdateExpenseApiRequest $request, LaravelExpenseModel $expense): ExpenseResource
     {
         Gate::authorize('update', $expense);
 
-        $dto = UpdateExpenseDTO::fromRequest(request: $request, id: new Id($id));
-
-        dd($dto);
+        $dto = UpdateExpenseDTO::fromRequest(request: $request, id: $expense->id);
 
         $expense = $this->updateExpenseAction->handle($dto);
 

@@ -42,14 +42,15 @@ class Expense extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn (int $amount): Amount => new Amount($amount)
+            get: fn (int $amount): Amount => new Amount($amount),
         );
     }
 
     protected function description(): Attribute
     {
         return Attribute::make(
-            get: fn (string $description): Description => new Description($description)
+            get: fn (string $description): Description => new Description($description),
+
         );
     }
 

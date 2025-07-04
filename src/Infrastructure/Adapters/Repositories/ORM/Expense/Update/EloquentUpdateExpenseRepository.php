@@ -14,7 +14,14 @@ class EloquentUpdateExpenseRepository extends BaseEloquentRepository implements 
 
     public function update(Expense $expense): Expense
     {
-        // TODO: Write Expense update logic
+        $affected = $this->model
+            ->where('id', $expense->id()?->getValue())
+            ?->update($expense->toArray());
+
+        if ($affected === 0) {
+            throw new \InvalidArgumentException('Expense not found');
+        }
+
         return $expense;
     }
 }

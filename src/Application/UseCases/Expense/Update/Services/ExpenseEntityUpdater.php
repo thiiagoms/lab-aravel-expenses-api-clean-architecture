@@ -16,7 +16,7 @@ abstract class ExpenseEntityUpdater
             status: $expense->status(),
             id: $expense->id(),
             createdAt: $expense->createdAt(),
-            updatedAt: new \DateTimeImmutable()
+            updatedAt: new \DateTimeImmutable
         );
     }
 }
