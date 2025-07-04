@@ -15,7 +15,7 @@ class UpdateExpenseTest extends TestCase
 
     private const string UPDATE_EXPENSE_ENDPOINT = '/api/v1/expense/';
 
-//    #[Test]
+    #[Test]
     public function it_should_return_unauthenticated_message_when_user_that_it_is_not_authenticated_try_to_retrieve_expense_that_does_not_exists(): void
     {
         $this
@@ -28,7 +28,7 @@ class UpdateExpenseTest extends TestCase
             );
     }
 
-//    #[Test]
+    #[Test]
     public function it_should_return_unauthenticated_message_when_user_that_it_is_not_authenticated_try_to_retrieve_expense(): void
     {
         $expense = LaravelExpenseModel::factory()->createOne();
@@ -54,13 +54,13 @@ class UpdateExpenseTest extends TestCase
             ->patchJson(self::UPDATE_EXPENSE_ENDPOINT.fake()->uuid())
             ->assertNotFound()
             ->assertJson(fn (AssertableJson $json): AssertableJson => $json
-                ->has('message')
-                ->whereType('message', 'string')
-                ->where('message', 'resource not found')
+                ->has('error')
+                ->whereType('error', 'string')
+                ->where('error', 'resource not found')
             );
     }
 
-//    #[Test]
+    #[Test]
     public function it_should_return_authorization_message_when_user_is_authenticated_but_does_not_own_the_expense(): void
     {
         $user = LaravelUserModel::factory()->create();

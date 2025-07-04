@@ -138,7 +138,7 @@ class ExpenseApiController extends Controller
      */
     public function update(UpdateExpenseApiRequest $request, LaravelExpenseModel $expense): ExpenseResource
     {
-        dd($expense->id);
+        Gate::authorize('update', $expense);
 
         $dto = UpdateExpenseDTO::fromRequest(request: $request, id: new Id($id));
 

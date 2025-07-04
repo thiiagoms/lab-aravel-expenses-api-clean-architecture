@@ -4,7 +4,9 @@ namespace Src\Infrastructure\Framework\Laravel\Policies;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Src\Domain\Expense\Entities\Expense;
+use Src\Infrastructure\Adapters\Mappers\Expense\ExpenseModelToExpenseEntityMapper;
 use Src\Infrastructure\Adapters\Mappers\User\UserModelToUserEntityMapper;
+use Src\Infrastructure\Framework\Laravel\Persistence\Expense as LaravelExpenseModel;
 use Src\Infrastructure\Framework\Laravel\Persistence\User as LaravelUserModel;
 
 class ExpensePolicy
@@ -20,8 +22,10 @@ class ExpensePolicy
     /**
      * @throws AuthorizationException
      */
-    public function update(LaravelUserModel $userModel, Expense $expense): bool
+    public function update(LaravelUserModel $userModel, LaravelExpenseModel $expense): bool
     {
+        $expense = ExpenseModelToExpenseEntityMapper::map($expense);
+
         return $this->verifyExpenseIsOwner($userModel, $expense);
     }
 
