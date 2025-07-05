@@ -59,6 +59,92 @@
                 }
             }
         },
+        "/api/v1/expense": {
+            "get": {
+                "tags": [
+                    "Expense"
+                ],
+                "summary": "Retrieves the detailed expense record for the authenticated user.",
+                "description": "Retrieves the detailed expense record for the authenticated user but only expenses that the authenticated user has permission to view will be returned.",
+                "operationId": "a5eab38b260aa446da4033632151995f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id (uuid) of the expense record to be retrieved.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "31e7d216-58d3-4fdd-8a87-57c16adbbf63"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Expense registered successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExpenseSwaggerResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The server could not process the request due to invalid input."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "scalar": "bearerAuth"
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Expense"
+                ],
+                "summary": "Create a new expense for authenticated user",
+                "description": "Create a new expense and receive the expense's data upon successful creation.",
+                "operationId": "f18600a500d08e650921e5c24d318e24",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterExpenseSwaggerRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Expense registered successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExpenseSwaggerResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The server could not process the request due to invalid input."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "scalar": "bearerAuth"
+                    }
+                ]
+            }
+        },
         "/api/v1/user/profile": {
             "get": {
                 "tags": [
@@ -297,6 +383,22 @@
                             }
                         }
                     },
+                    "401": {
+                        "description": "Authentication error or unauthorized error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "example": "This action is unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "400": {
                         "description": "Validation error",
                         "content": {
@@ -365,6 +467,79 @@
                         "description": "The expiration time of the token.",
                         "type": "integer",
                         "example": 3600
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterExpenseSwaggerRequest": {
+                "title": "Register expense request for authenticated user",
+                "description": "Base request for expense register operation for authenticated user.",
+                "required": [
+                    "amount",
+                    "description"
+                ],
+                "properties": {
+                    "amount": {
+                        "description": "The amount of the expense",
+                        "type": "string",
+                        "minimum": 1,
+                        "example": "12"
+                    },
+                    "description": {
+                        "description": "The description of the expense.",
+                        "type": "string",
+                        "minLength": 3,
+                        "example": "Expense description example"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "amount": "12",
+                    "description": "Expense description example"
+                }
+            },
+            "ExpenseSwaggerResponse": {
+                "title": "Registered expense response",
+                "description": "Registered expense response.",
+                "properties": {
+                    "data": {
+                        "title": "Data",
+                        "description": "The data of the created expense.",
+                        "properties": {
+                            "id": {
+                                "title": "Id",
+                                "description": "The unique identifier of the expense.",
+                                "type": "string",
+                                "example": "31e7d216-58d3-4fdd-8a87-57c16adbbf63"
+                            },
+                            "amount": {
+                                "title": "Amount",
+                                "description": "The value of the expense.",
+                                "type": "integer",
+                                "example": "122000000"
+                            },
+                            "description": {
+                                "title": "Description",
+                                "description": "The description address of the expense.",
+                                "type": "string",
+                                "example": "Expense example description"
+                            },
+                            "created_at": {
+                                "title": "Created at",
+                                "description": "The date and time when the user was created.",
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-06-30 12:41:15"
+                            },
+                            "updated_at": {
+                                "title": "Updated at",
+                                "description": "The date and time when the user was updated.",
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-06-30 12:41:15"
+                            }
+                        },
+                        "type": "object"
                     }
                 },
                 "type": "object"
@@ -540,6 +715,10 @@
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "Expense",
+            "description": "Expense"
         },
         {
             "name": "User",

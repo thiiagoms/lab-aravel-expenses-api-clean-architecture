@@ -24,6 +24,7 @@ class AppRouteProvider extends ServiceProvider
     {
         $this->mapUserRoutesApiVersionOne();
         $this->mapAuthRoutesApiVersionOne();
+        $this->mapExpenseRoutesApiVersionOne();
     }
 
     private function mapUserRoutesApiVersionOne(): void
@@ -47,6 +48,18 @@ class AppRouteProvider extends ServiceProvider
                 ->name('api.v1.auth.')
                 ->middleware('api')
                 ->group($authRoutesPath);
+        }
+    }
+
+    private function mapExpenseRoutesApiVersionOne(): void
+    {
+        $expenseRoutesPath = base_path('src/Interfaces/Http/Api/V1/Expense/Routes/routes.php');
+
+        if (file_exists($expenseRoutesPath)) {
+            Route::prefix('api/v1/expense/')
+                ->name('api.v1.expense.')
+                ->middleware('api')
+                ->group($expenseRoutesPath);
         }
     }
 }

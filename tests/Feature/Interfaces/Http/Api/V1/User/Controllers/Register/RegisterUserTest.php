@@ -4,6 +4,7 @@ namespace Feature\Interfaces\Http\Api\V1\User\Controllers\Register;
 
 use Closure;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -16,6 +17,13 @@ class RegisterUserTest extends TestCase
     use DatabaseTransactions;
 
     private const string REGISTER_USER_ENDPOINT = '/api/v1/register';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Queue::fake();
+    }
 
     public static function invalidNameProvider(): array
     {

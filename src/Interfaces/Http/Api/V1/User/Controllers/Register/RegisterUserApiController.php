@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Src\Interfaces\Http\Api\V1\User\Controllers\Register;
 
+use Exception;
 use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Post;
@@ -20,6 +21,9 @@ final class RegisterUserApiController extends Controller
 {
     public function __construct(private readonly RegisterUserAction $action) {}
 
+    /**
+     * @throws Exception
+     */
     #[Post(
         path: '/api/v1/register',
         operationId: 'registerUser',
@@ -35,6 +39,19 @@ final class RegisterUserApiController extends Controller
                 response: Response::HTTP_CREATED,
                 description: 'User successfully registered',
                 content: new JsonContent(ref: '#/components/schemas/UserSwaggerResponse')
+            ),
+            new \OpenApi\Attributes\Response(
+                response: Response::HTTP_UNAUTHORIZED,
+                description: 'Authentication error or unauthorized error',
+                content: new JsonContent(
+                    properties: [
+                        new Property(
+                            property: 'error',
+                            type: 'object',
+                            example: 'This action is unauthorized.'),
+                    ],
+                    type: 'object'
+                )
             ),
             new \OpenApi\Attributes\Response(
                 response: Response::HTTP_BAD_REQUEST,
