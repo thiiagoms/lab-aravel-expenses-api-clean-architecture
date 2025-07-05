@@ -59,9 +59,7 @@ class ExpenseTest extends TestCase
         $this->assertEquals($this->user, $expense->user());
         $this->assertEquals($this->amount, $expense->amount());
         $this->assertEquals($this->description, $expense->description());
-        $this->assertEquals(new Pending, $this->status);
-        $this->assertEquals(Status::PENDING, $this->status->getStatus());
-        $this->assertEquals(Status::PENDING->value, $this->status->getStatus()->value);
+        $this->assertEquals(Status::PENDING, $expense->status()->getStatus());
     }
 
     #[Test]
