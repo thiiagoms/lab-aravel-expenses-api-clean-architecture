@@ -14,7 +14,7 @@ class ExpenseEntityToExpenseModelMapper
 
         $model->id = $expense->id();
         $model->user_id = $expense->user()->id()->getValue();
-        $model->amount = $expense->amount();
+        $model->amount = $expense->amount()->getValue();
         $model->description = $expense->description();
         $model->status = $expense->status();
         $model->created_at = Carbon::createFromImmutable($expense->createdAt());
