@@ -10,6 +10,6 @@ Route::controller(ExpenseApiController::class)->middleware(['auth:api'])->group(
     Route::get('/{expense}', 'show')->name('show');
     Route::post('', 'store')->name('store');
     Route::patch('{expense}', 'update')->name('update');
-    Route::put('{id}', 'update')->name('update');
-    Route::delete('{id}', 'destroy')->name('destroy');
+    Route::put('{expense}', 'update')->name('update');
+    Route::delete('{expense}', 'destroy')->name('destroy');
 });

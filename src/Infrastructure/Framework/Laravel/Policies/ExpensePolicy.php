@@ -14,8 +14,10 @@ class ExpensePolicy
     /**
      * @throws AuthorizationException
      */
-    public function view(LaravelUserModel $userModel, Expense $expense): bool
+    public function view(LaravelUserModel $userModel, LaravelExpenseModel $expense): bool
     {
+        $expense = ExpenseModelToExpenseEntityMapper::map($expense);
+
         return $this->verifyExpenseIsOwner($userModel, $expense);
     }
 
@@ -32,8 +34,10 @@ class ExpensePolicy
     /**
      * @throws AuthorizationException
      */
-    public function delete(LaravelUserModel $userModel, Expense $expense): bool
+    public function delete(LaravelUserModel $userModel, LaravelExpenseModel $expense): bool
     {
+        $expense = ExpenseModelToExpenseEntityMapper::map($expense);
+
         return $this->verifyExpenseIsOwner($userModel, $expense);
     }
 

@@ -13,12 +13,12 @@ use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\RequestBody;
 use OpenApi\Attributes\Schema;
+use Src\Application\UseCases\Expense\Destroy\DestroyExpenseAction;
 use Src\Application\UseCases\Expense\Register\DTO\RegisterExpenseDTO;
 use Src\Application\UseCases\Expense\Register\RegisterExpenseAction;
-use Src\Application\UseCases\Expense\Retrieve\RetrieveExpenseAction;
 use Src\Application\UseCases\Expense\Update\DTO\UpdateExpenseDTO;
 use Src\Application\UseCases\Expense\Update\UpdateExpenseAction;
-use Src\Domain\ValueObjects\Id;
+use Src\Infrastructure\Adapters\Mappers\Expense\ExpenseModelToExpenseEntityMapper;
 use Src\Infrastructure\Framework\Laravel\Persistence\Expense as LaravelExpenseModel;
 use Src\Interfaces\Http\Api\V1\Expense\Requests\Register\RegisterExpenseApiRequest;
 use Src\Interfaces\Http\Api\V1\Expense\Requests\Update\UpdateExpenseApiRequest;
@@ -30,8 +30,8 @@ class ExpenseApiController extends Controller
 {
     public function __construct(
         private readonly RegisterExpenseAction $registerExpenseAction,
-        private readonly RetrieveExpenseAction $retrieveExpenseAction,
         private readonly UpdateExpenseAction $updateExpenseAction,
+        private readonly DestroyExpenseAction $destroyExpenseAction
     ) {}
 
     /**
@@ -120,22 +120,15 @@ class ExpenseApiController extends Controller
             ),
         ]
     )]
-    public function show(string $id): ExpenseResource
+    public function show(LaravelExpenseModel $expense): ExpenseResource
     {
-        $id = new Id($id);
-
-        $expense = $this->retrieveExpenseAction->handle($id);
-
         Gate::authorize('view', $expense);
+
+        $expense = ExpenseModelToExpenseEntityMapper::map($expense);
 
         return ExpenseResource::make($expense);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @throws Exception
-     */
     public function update(UpdateExpenseApiRequest $request, LaravelExpenseModel $expense): ExpenseResource
     {
         Gate::authorize('update', $expense);
@@ -148,10 +141,14 @@ class ExpenseApiController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @throws Exception
      */
-    public function destroy(string $id)
+    public function destroy(LaravelExpenseModel $expense): JsonResponse
     {
-        //
+        Gate::authorize('update', $expense);
+
+        $this->destroyExpenseAction->handle($expense->id);
+
+        return response()->json(status: Response::HTTP_NO_CONTENT);
     }
 }
