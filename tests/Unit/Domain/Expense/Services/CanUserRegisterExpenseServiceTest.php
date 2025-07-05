@@ -12,7 +12,7 @@ use Src\Domain\User\Entities\User;
 use Src\Domain\User\Status\Implementations\Active;
 use Src\Domain\User\Status\Implementations\AwaitingActivation;
 use Src\Domain\User\Status\Implementations\Banned;
-use src\Domain\User\Status\Implementations\Suspended;
+use Src\Domain\User\Status\Implementations\Suspended;
 use Src\Domain\User\Status\Interfaces\StatusInterface;
 use Src\Domain\User\ValueObjects\Email;
 use Src\Domain\User\ValueObjects\Name;
