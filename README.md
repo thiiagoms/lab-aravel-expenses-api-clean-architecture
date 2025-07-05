@@ -1,52 +1,56 @@
+# Expenses APi Management
 
-# Setup Docker Laravel 11 com PHP 8.3
-[Assine a Academy, e Seja VIP!](https://academy.especializati.com.br)
+## Dependencies
 
-### Passo a passo
-Clone Repositório
-```sh
-git clone -b laravel-12-with-php8.4 https://github.com/especializati/setup-docker-laravel.git app-laravel
+- Docker :whale:
+
+## Install
+
+1. Clone the repository and go to `expenses` directory:
+
+```shell
+git clone https://github.com/thiiagoms/laravel-expenses-api expenses
+cd expenses
 ```
-```sh
-cd app-laravel
-```
 
-Suba os containers do projeto
-```sh
+2. Setup containers and install dependencies inside app container:
+
+```shell
 docker-compose up -d
-```
-
-
-Crie o Arquivo .env
-```sh
-cp .env.example .env
-```
-
-Acesse o container app
-```sh
 docker-compose exec app bash
+thiiagoms@e795fc12781f:/var/www$ composer install
 ```
 
+3. Copy `.env.example` to `.env` and generate application key:
 
-Instale as dependências do projeto
-```sh
-composer install
+```shell
+thiiagoms@e795fc12781f:/var/www$ cp .env.example .env
+thiiagoms@e795fc12781f:/var/www$ php artisan key:generate
 ```
 
-Gere a key do projeto Laravel
-```sh
-php artisan key:generate
+4. Run migrations and setup queue:
+
+```shell
+thiiagoms@e795fc12781f:/var/www$ php artisan migrate
+thiiagoms@e795fc12781f:/var/www$ php artisan queue:work
 ```
 
-OPCIONAL: Gere o banco SQLite (caso não use o banco MySQL)
-```sh
-touch database/database.sqlite
+5. Generate swagger docs:
+
+```shell
+thiiagoms@e795fc12781f:/var/www$ php artisan l5-swagger:generate
 ```
 
-Rodar as migrations
-```sh
-php artisan migrate
-```
+6. Go to:
 
-Acesse o projeto
-[http://localhost:8000](http://localhost:8000)
+- `http://localhost:8000/api/documentation` - to see swagger docs
+
+- `http://localhost:8000/api` - to use application
+
+## Tests and lint
+
+1. To run tests and lint:
+
+```shell
+thiiagoms@e795fc12781f:/var/www$ composer coverage // Generates tests with coverage report
+thiiagoms@e795fc12781f:/var/www$ composer pint app tests
